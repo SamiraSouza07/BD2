@@ -1,0 +1,19 @@
+db.alunos.updateOne({nome:"Igor"},{$set:{disciplinas:["Matematica","Analise de Dados","Banco de Dados","Estatistica"]}})
+
+db.alunos.updateOne({nome:"Manoel"},{$set:{disciplinas:["Vendas","Portugues","Matematica"]}})
+
+db.alunos.updateOne({nome:"Juliana"},{$set:{disciplinas:["Logica de programacao","Analise de Dados","Desenvolvimento 2"]}})
+
+db.alunos.updateOne({nome:"Fernanda"},{$set:{disciplinas:["Banco de Dados","Desenvolvimento 1"]}})
+
+db.alunos.updateOne({nome:"Juliana"},{$set:{disciplinas:["Logica de programacao","Analise de Dados","Desenvolvimento 2"]}})
+
+db.alunos.find({disciplinas:{$size:4}})
+
+db.alunos.find({$expr:{$gte:[{$size:"$disciplinas"},3]}})
+
+db.alunos.find({disciplinas:{$regex:/Desenvolvimento/}})
+
+db.alunos.find({$and:[{"academia.nome":"Germinare Tech"},{estagio:true}]})
+
+db.alunos.find({$and:[{media:{$gte:7}},{$expr:{$gte:[{$size:"$disciplinas"},2]}}]})
