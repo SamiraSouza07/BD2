@@ -1,3 +1,11 @@
+db.alunos.insertMany([{nome:"Igor", sobrenome: "José", idade: 16, matricula:1023, media: 7.5, data_matricula: new Date(2022,01,21), estagio: false, academia:{nome:"Fintec", diretor: "Raul Moreira", qnt_professores: 8}},
+
+{nome:"Manoel", sobrenome: "Carlos", idade: 15, matricula:1024, media: 6.5,data_matricula: new Date(2022,01,22), estagio: false, academia:{nome:"Marcas", diretor: "Paulo Gualtiere", qnt_professores: 14}}, 
+
+{nome:"Juliana", sobrenome: "Lima", idade: 16, matricula:1019, media: 6.0,data_matricula: new Date(2022,01,22), estagio: true, academia:{nome:"Germinare Tech", diretor: "Raul Moreira", qnt_professores: 4}},
+
+{nome:"Fernanda", sobrenome: "Matos", idade: 16, matricula:1025, media: 7.8,data_matricula: new Date(2022,01,23), estagio: true, academia:{nome:"Germinare Tech", diretor: "Raul Moreira", qnt_professores: 4}}])
+
 db.alunos.updateOne({nome:"Igor"},{$set:{disciplinas:["Matematica","Analise de Dados","Banco de Dados","Estatistica"]}})
 
 db.alunos.updateOne({nome:"Manoel"},{$set:{disciplinas:["Vendas","Portugues","Matematica"]}})
