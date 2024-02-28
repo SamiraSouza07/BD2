@@ -1,0 +1,33 @@
+db.professores.insertMany([{nome:"Marcelo", sobrenome: "Grilo", idade: 34, matricula:2001, salario: 3000, data_contratacao: new Date(2022,01,10), professor_gestor: true, academia:{nome:"germinare Tech", diretor: "Raul Moreira", qnt_professores: 5}}
+
+db.professores.find({"academia.diretor":{$in:["Raul Moreira"]}}).count()
+
+db.professores.find({matricula:{$in:[2003,2005]}})
+
+db.professores.updateMany({$or:["academia.nome":{$exists:false}],[{"academia.nome":{$type:'string'}}]})
+
+
+db.professores.find({professor_gestor:{$type:'string'}})
+db.professores.updateOne({professor_gestor:{$type:'string'}},{$set:{professor_gestor:false}})
+
+db.professores.updateOne({$and:[{nome:'Marcelo'},{sobrenome:'Grilo'}]},{$set:{turmas:["1o tech","2o tech","3o tech"]}})
+
+db.professores.updateOne({$and:[{nome:'Marcelo'},{sobrenome:'Modolo'}]},{$set:{turmas:["1o tech","2o tech","3o tech"]}})
+
+db.professores.updateOne({nome:'Nisflei'},{$set:{turmas:["1o tech","2o tech"]}})
+
+db.professores.updateOne({$and:[{nome:'Carlos'},{sobrenome:'Santi'}]},{$set:{turmas:["1o tech"]}})
+
+db.professores.find({$and:[{idade:{$gte:40}},{professor_gestor:false}]})
+
+db.professores.updateMany({$and:[{idade:{$gte:50}},{salario:{$gt:5000}}]},{$set:{professor_gestor:true}})
+
+db.professores.find({$and:[{$expr:{$gte:[{$size:"$turmas"},3]}},{salario:{$lt:5000}}]})
+
+db.alunos.find({$expr:{$gte:[{$size:"$turmas"},3]}})
+
+
+
+
+db.professores.updateMany({$or:[{"academia.qnt_professores":{$exists:false}},{"academia.qnt_professores":{$type:'string'}}]},{$set:{"academia.qnt_professores":4}) 
+
