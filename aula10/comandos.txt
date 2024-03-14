@@ -1,0 +1,17 @@
+db.clientes.insertMany(
+    [
+       {nome:"Jucelio", sobrenome: "Gomes", idade: 34, agencia:"0001", conta:26500 ,saldo: 3000, data_abertura: new Date(2022,01,10), cartao_credito: {status: "ativo", saldo: 2000}, gerente: "Carla Silva", endereço:{cidade:"São Paulo", estado:"SP", cep:"01001-50"}, emprestimo_disponivel: false},
+
+		{nome:"Lamelo", sobrenome: "Antony", idade: 28, agencia:"0001", conta:25690 ,saldo: 13000, data_abertura: new Date(2021,01,15), cartao_credito: {status: "ativo", saldo: 50000}, gerente: "Carla Silva", endereço:{cidade:"São Paulo", estado:"SP", cep:"01002-10"}, emprestimo_disponivel: true, emprestimo_tipo:["FGTS", "Pessoal", "Garantia", "Consignado"]},
+
+		{nome:"Juliano", sobrenome: "Borges", idade: 49, agencia:"0001", conta:16580 ,saldo: 1690000, data_abertura: new Date(2019,01,10), cartao_credito: {status: "ativo", saldo: 10000}, gerente: "Manolo Souza", endereço:{cidade:"Rio de Janeiro", estado:"SP", cep:"05100-70"}, emprestimo_disponivel: true, emprestimo_tipo:["FGTS", "Pessoal", "Garantia"]},
+
+		{nome:"Emiliano", sobrenome: "Ramos", idade: 68, agencia:"0001", conta:10090 ,saldo: 9000, data_abertura: new Date(2020,06,5), gerente: "Manolo Souza", endereço:{cidade:"Rio de Janeiro", estado:"SP", cep:"05890-06"}, emprestimo_disponivel: false},
+
+		{nome:"Iago", sobrenome: "Otávio", idade: 61, agencia:"0001", conta:200010,saldo: 5000, data_abertura: new Date(2022,08,08), cartao_credito: {status: "inativo", saldo: false}, gerente: "Poliana Abreu", endereço:{cidade:"Campinas", estado:"SP", cep:"88098-11"}, emprestimo_disponivel: true},
+
+		{nome:"Verônica", sobrenome: "Nunes", idade: 21, agencia:"0001", conta:50010,saldo: 50, data_abertura: new Date(2023,01,15), gerente: "Carla Silva", endereço:{cidade:"São Paulo", estado:"SP", cep:"01555-87"}, emprestimo_disponivel: false},
+    ]
+)
+
+ db.clientes.updateOne({$and:[{"cartao_credito.status":{$eq:"inativo"}},{cartao_credito:{$exists:true}}]},{$unset:{cartao_credito:""}})

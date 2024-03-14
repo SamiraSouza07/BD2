@@ -1,0 +1,29 @@
+db.clientes.updateOne({nome:"Lamelo"},{$push:{emprestimo_tipo:["Consignado","Pessoal"]}})
+
+ db.clientes.updateOne({nome:"Lamelo"},{$pop:{emprestimo_tipo:1}})
+
+ db.clientes.updateOne({nome:"Lamelo"},{$addToSet:{emprestimo_tipo:{$each:["FGTS","Consignado","Pessoal","Garantia"]}}})
+
+
+ db.lista.insertOne({_id:1,vetor_num:[5,8,11,15,9],vetor_nome:["Maria","Carlos","Victor","Hugo","Yuri"]})
+
+ db.lista.updateOne({_id:1},{$push:{vetor_num:{$each:[10,3]}}})
+
+ db.lista.updateOne({_id:1},{$pullAll:{vetor_num:[10,3]}})
+
+  db.lista.updateOne({_id:1},{$push:{vetor_num:{$each:[10,3],$position:0}}})
+
+  db.lista.updateOne({_id:1},{$push:{vetor_nome:{$each:["Gabriela","Anderson"],$position:2}}})
+
+  db.lista.updateOne({_id:1},{$push:{vetor_nome:{$each:[],$slice:3}}})
+
+  db.lista.updateOne({_id:1},{$push:{vetor_nome:{$each:["Zacarias","Andre","Bruno"],$sort:1}}})
+
+  db.lista.updateOne({_id:1},{$push:{vetor_num:{$each:[],$sort:1}}})
+
+  db.clientes.updateMany({emprestimo_tipo:{$exists:true}},{$push:{emprestimo_tipo:{$each:[],$sort:1}}})
+
+  db.clientes.updateMany({emprestimo_tipo:[]},{$unset:{emprestimo_tipo:""}})
+
+  db.clientes.find().sort({saldo:1})
+   db.clientes.find({},{nome:1,saldo:1,_id:0}).sort({saldo:1})
