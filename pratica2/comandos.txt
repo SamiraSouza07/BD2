@@ -1,0 +1,17 @@
+db.produtos.find({$or:[{nome:{$regex:/pão/i}},{nome:{$regex:/pao/i}}]})
+
+
+db.produtos.find({"informacoes_adicionais.gorduras_trans":{$type:"bool"}})
+db.produtos.updateMany({"informacoes_adicionais.gorduras_trans":{$type:"bool"}},{$set:{"informacoes_adicionais.gorduras_trans":0}})
+
+{{$type:"boolean"}:{$ne:}}
+
+
+db.produtos.find({$expr:{$gte:[{$size:"$lojas"},4]}},{_id:0,nome:1,lojas:1,"informacoes_adicionais.vegetariano":1})
+
+
+db.produtos.updateMany({segmento:"Alimentos"},{$rename:{"embalagem":"embalagem(kg)"}})
+db.produtos.updateMany({segmento:"Higiene"},{$rename:{"embalagem":"embalagem(g)"}})
+db.produtos.updateMany({segmento:"Limpeza"},{$rename:{"embalagem":"embalagem(ml)"}})
+
+db.produtos.find({segmento:"Alimentos"})

@@ -1,0 +1,23 @@
+mongoimport.exe --db=techBank --collection=Contas --type=csv --headerline --file="C:\Users\samiracampos-ieg\Downloads\techBank_files\Contas.csv"
+
+mongoimport.exe --db=techBank --collection=Endereco --type=csv --headerline --file="C:\Users\samiracampos-ieg\Downloads\techBank_files\Endereco.csv"
+
+mongoimport.exe --db=techBank --collection=Cliente --file="C:\Users\samiracampos-ieg\Downloads\techBank_files\Clientes.json" --jsonArray
+
+db.Contas.renameCollection("contas")
+db.Cliente.renameCollection("clientes")
+db.Endereco.renameCollection("enderecos")
+
+db.clientes.find({genero:"Masculino"}).count()
+
+db.clientes.find().,sort({data_nascimento:1}).limit(1)
+
+db.clientes.find({segiros:{$all:["seguro de vida", "seguro para carro"]}}).count()
+
+db.clientes.distinct("status_civil").length
+
+db.enderecos.distinct("estado").length
+
+db.clientes.distinct("profissao",{profissao:{$regex:/^v/i}})
+
+db.clientes.aggregate({$group:{_id:"$status_civil","Quantidade":{$count:{}}}})

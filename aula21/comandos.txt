@@ -1,0 +1,33 @@
+db.contas.aggregate(
+    {$group:{_id:"$tipo","Quantidade":{$count:{}}}}
+)
+
+db.contas.aggregate(
+    {$group:{_id:"$tipo"}},{$count:"Quantidade de documentos"}
+)
+
+
+db.contas.aggregate(
+    {$group:{_id:"$agencia"}},
+    {$count:"Quantidade de agencias cadastradas"}
+)
+
+db.contas.distinct("agencia").length
+
+db.contas.aggregate([
+    {$sortByCount:"$agencia"},
+    {$limit:1}
+])
+
+db.contas.aggregate([
+    {$group:{_id:"$agencia","qnt":{$count:{}}}},
+    {$sort:{"qnt":-1}},
+    {$limit:1}
+])
+
+db.contas.aggregate([
+    {$group:{_id:"$agencia","Total":{$sum:"$valor"}}},
+    {$sort:{"Total":-1}},
+    {$limit:5}
+])
+

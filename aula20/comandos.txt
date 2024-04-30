@@ -1,0 +1,86 @@
+db.contas.aggregate([
+    {$group:{_id:"$tipo","Total":{$sum:"$valor"}}},
+    {$sort:{"Total":1}}
+])
+
+
+db.contas.aggregate([
+    {$group:{_id:"$tipo","Total":{$sum:"$valor"}}},
+    {$sort:{"Total":-1}},
+    {$limit:1}
+])
+
+
+db.contas.aggregate([
+    {$group:{_id:"$agencia","Total":{$sum:"$valor"}}},
+    {$sort:{"Total":-1}},
+    {$limit:1}
+])
+
+db.clientes.find({seguros:{$exists:true}}).count()
+
+db.contas.aggregate([
+    {$group:{_id:"$_id","Total":{$length:"$valor"}}},
+    {$sort:{"Total":-1}},
+    {$limit:1}
+])
+
+db.clientes.aggregate([
+    {$unwind:"$seguros"},
+    {$count:"Quantidade de seguros contratados"}
+])
+
+db.clientes.aggregate([
+    {$unwind:"$seguros"},
+    {$group:{_id:"$genero"}},"Quantidade por genero"{$count:{}}
+])
+
+db.clientes.aggregate([
+    {$unwind:"$seguros"},
+    {$sortByCount:"$genero"}
+])
+
+db.contas.aggregate([{$match:{agencia:1066}}])
+
+db.contas.aggregate([
+    {$match:{$and:[{tipo:"Conta salário"},{valor:{$gt:8000}}]}},
+    {$count:"Total de contas salários com mais de 8000 de saldo"}
+])
+
+db.contas.aggregate([
+    {$match:{valor:{$gt:8000}}},
+    {$group:{_id:"$tipo","Quantidade":{$count:{}}}}
+])
+
+db.contas.aggregate([
+    {$match:{valor:{$gt:8000}}},
+    {$sortByCount:"$tipo"}
+])
+
+
+db.clientes.aggregate([
+    {$unwind:"$seguros"},
+    {$group:{_id:"$seguros"}},
+    {$count:"Quantidade de seguros contratados"}
+])
+
+db.clientes.aggregate([
+    {$unwind:"$seguros"},
+    {$group:{_id:"$seguros","contagem":{$count:{}}}}
+])
+
+-------------dbBank---------------
+
+db.clientes.aggregate([
+    {$unwind:"$emprestimo_tipo"},
+    {$group:{_id:"$emprestimo_tipo","Quantidade de emprestimos por tipo":{$count:{}}}}
+])
+db.clientes.aggregate([
+    {$unwind:"$emprestimo_tipo"},
+    {$group:{_id:"$emprestimo_tipo"}},
+    {$count:"Quantidade de emprestimos"}
+])
+db.clientes.aggregate([
+    {$sort:{"data_abertura":-1}},
+    {$limit:1}
+])

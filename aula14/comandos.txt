@@ -1,0 +1,13 @@
+ db.clientes.updateMany({emprestimo_disponivel:true},{$addToSet:{emprestimo_tipo:{$each:["FGTS"]}}})
+
+ db.clientes.find({$and:[{gerente:{$regex:/anolo/}},{emprestimo_tipo:{$in:["Garantia"]}}]}).count()
+
+ db.clientes.updateOne({nome:"Jucelio",sobrenome:"Gomes"},{$set:{"endereco.cidade":"Teresópolis","endereco.estado":"RJ",agencia:"0002",data_ultima_atualizacao: new Date()}})
+
+ db.clientes.updateOne({'cartao_credito':{$exists:false}},{$push:{cartao_credito:{status:'ativo',saldo:3000}}})
+
+ db.clientes.find({}.sort(saldo:-1)).limit(1)
+
+ db.clientes.updateOne({nome:"Lamelo"},{$set:{saldo:1690100}})
+
+ 

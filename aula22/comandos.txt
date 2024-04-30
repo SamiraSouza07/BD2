@@ -1,0 +1,63 @@
+db.enderecos.aggregate([
+    {$group:{_id:"$id_cliente","qnt":{$count:{}}}},
+    {$match:{"qnt":{$gt:1}}}
+])
+
+db.enderecos.aggregate([
+    {$sortByCount:"$id_cliente"},
+    {$match:{"count":{$gt:1}}},
+    {$count:"Clientes com mais de um endereço"}
+])
+
+
+db.enderecos.aggregate([
+    {$sortByCount:"$estado"},
+    {$match:{"count":{$gte:10}}},
+    {$count:"Estados com mais de 10 ocorrencias"}
+])
+
+"MG","SP","ES","RJ"
+
+db.enderecos.aggregate([
+    {$match:{estado:{$in:["MG","SP","ES","RJ"]}}},
+    {$count:"Endereços no sudeste"},
+    {$project:{"Porcentagem":
+                {$round:[
+                    {$multiply:[
+                        {$divide:["$Endereços no sudeste",250]},100]},2]}}}
+])
+
+db.contas.aggregate([
+    {$sortByCount:"$id_cliente"},
+    {$match:{count:{$gt:1}}},
+    {$count:"Clientes com mais de um tipo de conta"}
+])
+
+db.clientes.aggregate([
+    {$sortByCount:"$profissao"},
+    {$limit:1}
+])
+
+db.clientes.aggregate([
+    {$match:{status_civil:/casado/i}},
+    {$sort:{data_nascimento:-1}},
+    {$limit:1}
+])
+
+db.contas.aggregate([
+    {$group:{_id:"_id","Soma":{$sum:"$valor"}}},
+    {$project:{"Média":
+                {$round:[
+                    {$divide:["$Soma",262]},2]}}}
+])
+
+
+---------dbBank------------
+db.clientes.aggregate([
+    {$match:{"endereco.estado":"SP"}},
+    {$count:"Contagem"}
+])
+
+db.clientes.aggregate([
+    {$group:{_id:"$endereco.estado","Soma do saldo dos clientes de cada estado":{$sum:"$saldo"}}}
+])

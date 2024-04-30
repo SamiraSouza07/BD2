@@ -1,0 +1,71 @@
+mongoimport.exe --db=youtubeData --collection=youtube --type=csv --headerline --file="C:\Users\samiracampos-ieg\Downloads\globalyoutubestatistics.csv"
+
+db.youtube.updateOne({'Gross tertiary education enrollment (%)':{$exists:true}},{$unset:{'Gross tertiary education enrollment (%)':""}})
+
+
+
+db.youtube.updateMany({'Unemployment rate':{$exists:true}},{$unset:{'Unemployment rate':""}})
+
+db.youtube.updateMany({'Urban_population':{$exists:true}},{$unset:{'Urban_population':""}})
+
+db.youtube.updateMany({'Latitude':{$exists:true}},{$unset:{'Latitude':""}})
+
+db.youtube.updateMany({'Longitude':{$exists:true}},{$unset:{'Longitude':""}})
+
+db.youtube.aggregate([
+    {$sort:{"subscribers":-1}},
+    {$limit:10}
+])
+
+db.youtube.aggregate([
+    {$group:{_id:"$Country","Quantidade de youtubers":{$count:{}}}},
+    {$sort:{"Quantidade de youtubers":-1}},
+    {$limit:3}
+])
+
+db.youtube.aggregate([
+    {$match:{$and:[{"created_year":{$gte:2010}},{"created_year":{$lte:2022}}]}},
+    {$group:{_id:"$created_year","Quantidade de canais criados":{$count:{}}}},
+    {$sort:{"Quantidade de canais criados":-1}},
+    {$limit:1}
+])
+db.youtube.aggregate([
+    {$match:{$and:[{"created_year":{$gte:2010}},{"created_year":{$lte:2022}}]}},
+    {$group:{_id:"$created_year","Quantidade de canais criados":{$count:{}}}},
+    {$sort:{"Quantidade de canais criados":1}},
+    {$limit:1}
+])
+
+db.youtube.aggregate([
+    {$match:{"Country":"Brazil"}},
+    {$group:{_id:"$category","Quantidade de youtubers por categoria":{$count:{}}}},
+    {$sort:{"Quantidade de youtubers por categoria":-1}},
+    {$limit:5}
+])
+
+db.youtube.aggregate([
+    {$match:{"Country":"Brazil"}},
+    {$match:{"created_year":{$lte:2021}}},
+    {$sort:{'highest_yearly_earnings':-1}},
+    {$limit:1}
+])
+
+db.youtube.aggregate([
+    {$group:{_id:"$Country","Ganho mensal":{$sum:"$highest_monthly_earnings"}}},
+    {$sort:{"Ganho mensal":-1}}
+])
+
+db.youtube.aggregate([
+    {$group:{_id:"$Youtuber","Ganho mensal":{$sum:"$highest_monthly_earnings"}}},
+    {$sort:{"Ganho mensal":-1}},
+    {$group:{_id:"$Country","Quantas vezes aparece na base":{$count:{}}}}
+])
+
+
+
+highest_yearly_earnings
+db.youtube.aggregate([
+    {$group:{_id:"$Youtuber","Ganho":{$sum:"$highest_yearly_earnings"}}},
+    {$sort:{"Ganho":-1}},
+    {$limit:1}
+])
