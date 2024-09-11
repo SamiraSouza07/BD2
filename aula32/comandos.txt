@@ -1,0 +1,15 @@
+db.contas.aggregate([
+    {$facet:
+    {
+        calcularContas:[{$group:{_id:null,media:{$avg:"$valor"}}}],
+        totalContas: [{$project:{_id:1,valor:1,id_cliente:1}}]
+    }
+    },
+    {$addFields:{
+    condição:{$cond:[
+        {$or:[
+            {$gte:{"$totalContas.valor":"$calcularContas.media"}}
+        ]},"nasceu no final de semana","nasceu em um dia da semana"]}
+    }},
+    {$sortByCount:"$condição"}
+])

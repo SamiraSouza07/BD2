@@ -1,0 +1,55 @@
+
+db.clientes.aggregate([
+    {$project:{"ano":{$year:"$data_nascimento"}}}
+])
+
+db.clientes.aggregate([
+    {$project:{"ano":{$year:"$data_nascimento"}}},
+    {$match:{"ano":{$lte:new Date().getFullYear()-30}}},
+    {$count:"acima30Anos"}
+])
+
+db.clientes.aggregate([
+    {$project:{"mes":{$month:"$data_nascimento"}}}
+])
+
+db.clientes.aggregate([
+    {$project:{"ano":{$month:"$data_nascimento"}}},
+    {$match:{"ano":1}},
+    {$count:"pessoas"}
+])
+
+db.clientes.aggregate([
+    {$project:{"mes":{$month:"$data_nascimento"},"cpf":1}},
+    {$match:{"mes":{$eq:1}}},
+    {$lookup:{
+        from:"contas",
+        localField:"cpf",
+        foreignField:"cpf",
+        as:"contasClientes"
+    }},
+    {$unwind:"$contasClientes"},
+    {$count:"contas"}
+])
+
+db.clientes.aggregate([
+    {$match:{$expr:{$eq:[{$month:"$data_nascimento"},1]}}},
+    {$lookup:{
+        from:"contas",
+        localField:"cpf",
+        foreignField:"cpf",
+        as:"contas"
+    }}
+])
+
+db.clientes.aggregate([
+    {$match:{$expr:{$eq:[{$month:"$data_nascimento"},1]}}},
+    {$lookup:{from:"contas",localField:"cpf",foreignField:"cpf",as:"contas"}},
+    {$unwind:"$contas"},
+    {$set:{"contas.valor":{$add:["$contas.valor",100]}}}
+])
+
+db.clientes.aggregate([
+    {$match:{$expr:{$eq:[{$dayOfWeek:"$data_nascimento"},4]}}},
+    {$project:{mensagem:{$concat:["$nome"," nasceu na quarta-feira"]}}}
+])

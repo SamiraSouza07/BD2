@@ -1,0 +1,57 @@
+db.contas.aggregate([
+    {$project:{
+        _id:0,
+        cpf:1,
+        valor:1,
+        condição:{$cond:[
+            {$gt:["$valor",9500]},"Acima de R$9500","abaixo de R$9500"]}
+    }}
+])
+
+db.clientes.aggregate([
+    {$addFields:{
+    condição:{$cond:[
+        {$or:[
+            {$eq:[{$dayOfWeek:"$data_nascimento"},1]},
+            {$eq:[{$dayOfWeek:"$data_nascimento"},7]}
+        ]},"nasceu no final de semana","nasceu em um dia da semana"]}
+    }},
+    {$sortByCount:"$condição"}
+])
+
+
+db.clientes.aggregate([
+    {$addFields:{
+    condição:{$cond:{
+        if: {$or:[{$eq:[{$dayOfWeek:"$data_nascimento"},1]},{$eq:[{$dayOfWeek:"$data_nascimento"},7]}]},
+        then: "nasceu no final de semana",
+        else: "nasceu em um dia da semana"}}
+    }},
+    {$sortByCount:"$condição"}
+])
+
+db.contas.aggregate([
+    {$project:{valor:{$ifNull:["$valor","Campo valor está vazio ou nulo"]}}}
+])
+
+db.contas.insertOne({nome:"teste",valor:null})
+
+db.contas.aggregate([
+    {$project:{valor:{$ifNull:["$valor","Campo valor está vazio ou nulo"]}},
+    {$match:{valor:{$type:2}}}}
+])
+
+db.contas.aggregate([
+    {$project:{
+        valor:1,
+        condição:{
+            $switch:{
+                branches:[
+                    {case:{$lte:["$valor",3000]}, then:"valor abaixo do esperado"},
+                    {case:{$and:[{$gt:["$valor",3000]},{$lte:["$valor",6000]}]}, then:"valor na média"}
+                ],
+                default:"valor acima do esperado"
+            }
+        }
+    }}
+])

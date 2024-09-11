@@ -1,0 +1,82 @@
+db.clientes.aggregate([
+    {$lookup:{
+        from: "contas",
+        localField: "_id",
+        foreignField:"id_cliente",
+        as: "contas"
+    }},
+    {$unwind:"$contas"},
+    {$match:{"contas.valor":{$gte:0}}},
+    {$group:{_id:"$_id","soma":{$sum:"$contas.valor"}}},
+    {$sort:{soma:-1}},
+    {$limit:3},
+    {$lookup:{
+        from: "clientes",
+        localField: "_id",
+        foreignField: "_id",
+        as: "clientes"
+    }},
+    {$project:{
+        _id:0,
+        soma:1, 
+        "clientes.nome":1,
+        novoCampo:{$trunc:["$soma",1]}
+    }}
+])
+
+
+db.contas.aggregate([
+    {$match:{valor:{$gte:0}}},
+    {$group:{_id:"$id_cliente","soma":{$sum:"$valor"}}},
+    {$sort:{soma:-1}},
+    {$limit:3},
+    {$lookup:{
+        from: "clientes",
+        localField: "_id",
+        foreignField: "_id",
+        as: "clientes"
+    }},
+    {$project:{
+        _id:0,
+        soma:1, 
+        "clientes.nome":1,
+        novoCampo:{$trunc:["$soma",1]}
+    }}
+])
+
+db.contas.aggregate([
+    {$match:{valor:{$gte:0}}},
+    {$group:{_id:"$id_cliente","soma":{$sum:"$valor"}}},
+    {$sort:{soma:1}},
+    {$limit:3},
+    {$lookup:{
+        from: "clientes",
+        localField: "_id",
+        foreignField: "_id",
+        as: "clientes"
+    }},
+    {$project:{
+        _id:0,
+        soma:1, 
+        "clientes.nome":1,
+        novoCampo:{$trunc:[{$multiply:["$soma",1.1]},1]}
+    }}
+])
+
+db.clientes.aggregate([
+    {$lookup:{
+        from:"enderecos",
+        localField:"_id",
+        foreignField:"id_cliente",
+        as:"endereco"
+    }},
+    {$match:{"endereco.estado":"RR"}},
+    {$lookup:{
+        from:"contas",
+        localField:"_id",
+        foreignField:"id_cliente",
+        as:"conta"
+    }},
+    {$addFields:{totalContas:{$size:"$conta"}}},
+    {$match:{totalContas:{$gt:1}}}
+])

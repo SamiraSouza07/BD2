@@ -1,0 +1,68 @@
+db.clientes.aggregate([
+    {$lookup:{
+        from:"enderecos",
+        localField:"_id",
+        foreignField:"id_cliente",
+        as:"endereco"
+    }},
+    {$match:{"endereco.estado":"RR"}},
+    {$addFields:{totalEnderecos:{$size:"$endereco"}}},
+    {$lookup:{
+        from:"contas",
+        localField:"_id",
+        foreignField:"id_cliente",
+        as:"contas"
+    }},
+    {$match:{totalEnderecos:{$gt:1}}}
+])
+
+db.clientes.aggregate([
+    {$lookup:{
+        from:"enderecos",
+        localField:"_id",
+        foreignField:"id_cliente",
+        as:"endereco"
+    }},
+    {$match:{"endereco.estado":"ES"}},
+    {$lookup:{
+        from:"contas",
+        localField:"_id",
+        foreignField:"id_cliente",
+        as:"contas"
+    }},
+    {$unwind:"$contas"},
+    {$match:{"contas.valor":{$gte:0}}},
+    {$group:{_id:"$_id",soma:{$sum:"$contas.valor"}}},
+    {$lookup:{
+        from:"clientes",
+        localField:"_id",
+        foreignField:"_id",
+        as: "clientes"
+    }},
+    {$unwind:"$clientes"},
+    {$project:{
+        nome:"$clientes.nome",
+        soma:1,
+        metade:{$trunc:[{$divide:["$soma",2]},2]}
+    }}
+])
+
+
+db.clientes.aggregate([
+    {$lookup:{
+        from:"contas",
+        localField:"_id",
+        foreignField:"id_cliente",
+        as: "contas",
+        pipeline:[
+            {$match:{tipo:"Conta corrente",valor:{$gt:0}}},
+            {$project:{
+                _id:0,
+                numero_conta:1,
+                agencia:1,
+                valor:1,
+            }}
+        ]
+    }},
+    {$match:{contas:{$ne:[]}}}
+])

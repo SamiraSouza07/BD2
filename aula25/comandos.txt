@@ -1,0 +1,58 @@
+db.clientes.aggregate([
+    {$lookup:{
+        from:"contas",
+        localField:"_id",
+        foreignField:"id_cliente",
+        as:"contas"}},
+    {$limit:1}
+])
+
+db.clientes.aggregate([
+    {$lookup:{
+        from:"contas",
+        localField:"cpf",
+        foreignField:"cpf",
+        as:"contasClientes"}},
+    {$limit:1}
+])
+
+db.clientes.aggregate([
+    {$match:{_id:30}},
+    {$lookup:{
+        from:"contas",
+        localField:"_id",
+        foreignField:"id_cliente",
+        as:"contas"}},
+    {$addFields:{"num_contas":{$size:"$contas"}}},
+    {$project:{contas:0}}
+])
+
+db.clientes.aggregate([
+    {$lookup:{
+        from:"contas",
+        localField:"cpf",
+        foreignField:"cpf",
+        as:"contas"
+    }},
+    {$project:{contas:1}}
+])
+
+
+db.clientes.aggregate([
+    {$lookup:{
+        from: "enderecos",
+        localField: "_id",
+        foreignField:"id_cliente",
+        as: "enderecos"
+    }},
+    {$addFields:{qnt_endereco:{$size:"$enderecos"}}},
+    {$sort:{qnt_endereco:-1,data_nascimento:1}},
+    {$limit:4},
+    {$project:{
+        _id:0,
+        nome:1, 
+        data_nascimento:1,
+        "enderecos.estado":1, 
+        "enderecos.cidade":1 
+    }}
+])

@@ -1,0 +1,33 @@
+db.clientes.aggregate([
+    {$lookup:{
+        from:"contas",
+        localField:"_id",
+        foreignField:"id_cliente",
+        as: "contas",
+        pipeline:[
+            {$match:{tipo:"Conta corrente",valor:{$gt:0}}},
+            {$lookup:{
+                from:"enderecos",
+                localField:"id_cliente",
+                foreignField:"id_cliente",
+                as: "endereços",
+                pipeline:[
+                    {$match:{estado:"RJ"}},
+                    {$project:{
+                        estado:1,
+                        _id:0
+                    }}
+                ]
+            }},
+            {$match:{"endereços":{$ne:[]}}},
+            {$project:{
+                _id:0,
+                numero_conta:1,
+                agencia:1,
+                valor:1,
+                "endereços":1
+            }}
+        ]
+    }},
+    {$match:{"contas":{$ne:[]}}}
+])
